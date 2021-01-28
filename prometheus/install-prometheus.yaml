@@ -1,0 +1,143 @@
+---
+# Add Node Exporter
+- import_playbook: ../node-exporter/install-node-exporter.yaml server_type='Prometheus'
+
+# Add Process Exporter
+- import_playbook: ../process-exporter/install-process-exporter.yaml server_type='Prometheus'
+
+# Add Nginx
+- import_playbook: ../nginx/install-nginx.yaml port='9090' server_type='Prometheus'
+
+# Installing Prometheus
+- hosts: tag_Name_{{ env }}_centralized_logs_Prometheus
+  remote_user: ec2-user
+  vars_files:
+    - ../../output.yml
+  vars:
+    prometheus_version: 2.20.1
+  tasks:
+    - name: create group
+      group:
+        name: prometheus
+        state: present
+      become: yes
+
+    - name: create user
+      user:
+        name: prometheus
+        group: prometheus
+        createhome: no
+        system: yes
+        state: present
+      become: yes
+
+    - name: create directories for prometheus
+      file:
+        path: /etc/prometheus
+        state: directory
+      become: yes
+
+    - name: create directories for prometheus
+      file:
+        path: /var/lib/prometheus
+        state: directory
+      become: yes
+
+    - name: Change file ownership, group and permissions
+      file:
+        path: /etc/prometheus
+        owner: prometheus
+        group: prometheus
+      become: yes
+
+    - name: Change file ownership, group and permissions
+      file:
+        path: /var/lib/prometheus
+        owner: prometheus
+        group: prometheus
+      become: yes
+
+    - name: download prometheus
+      get_url:
+        url: https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz
+        dest: /tmp
+      become: yes
+
+    - name: unarchive prometheus
+      unarchive:
+        remote_src: yes
+        src: /tmp/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz
+        dest: /tmp
+      become: yes
+
+    - name: Copy Prometheus binary
+      copy:
+        remote_src: yes
+        src: /tmp/prometheus-{{ prometheus_version }}.linux-amd64/prometheus
+        dest: /usr/local/bin
+        owner: prometheus
+        group: prometheus
+        mode: '0770'
+      become: yes
+
+    - name: Copy Promtool binary
+      copy:
+        remote_src: yes
+        src: /tmp/prometheus-{{ prometheus_version }}.linux-amd64/promtool
+        dest: /usr/local/bin
+        owner: prometheus
+        group: prometheus
+        mode: '0770'
+      become: yes
+
+    - name: Copy Prometheus files
+      copy:
+        remote_src: yes
+        src: /tmp/prometheus-{{ prometheus_version }}.linux-amd64/consoles/
+        dest: /etc/prometheus
+        owner: prometheus
+        group: prometheus
+      become: yes
+
+    - name: Copy Prometheus files
+      copy:
+        remote_src: yes
+        src: /tmp/prometheus-{{ prometheus_version }}.linux-amd64/console_libraries/
+        dest: /etc/prometheus
+        owner: prometheus
+        group: prometheus
+      become: yes
+
+    - name: Copy Prometheus config file
+      template:
+        src: ./prometheus.yml
+        dest: /etc/prometheus/prometheus.yml
+        owner: prometheus
+        group: prometheus
+      become: yes
+
+    - name: Copy default alerts file
+      copy:
+        src: ./default-alerts.yml
+        dest: /etc/prometheus/default-alerts.yml
+      become: yes
+
+    - name: Copy oncall alerts file
+      copy:
+        src: ./oncall-alerts.yml
+        dest: /etc/prometheus/oncall-alerts.yml
+      become: yes
+
+    - name: install unit file to systemd
+      template:
+        src: prometheus.service
+        dest: /etc/systemd/system/prometheus.service
+      become: yes
+
+    - name: configure systemd to use service
+      systemd:
+        daemon_reload: yes
+        enabled: yes
+        state: restarted
+        name: prometheus.service
+      become: yes

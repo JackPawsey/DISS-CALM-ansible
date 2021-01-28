@@ -1,0 +1,61 @@
+# Installing Nginx
+- hosts: tag_Name_{{ env }}_centralized_logs_{{ server_type }}
+  remote_user: ec2-user
+  vars_files:
+    - ../../output.yml
+  vars:
+    nginx_version: 1.18.0-1
+    application: "{{ server_type | lower }}"
+  tasks:
+  - debug:
+      var: application
+
+  - name: Add Nginx repository
+    yum_repository:
+      name: Nginx
+      description: Nginx repository
+      baseurl: http://nginx.org/packages/centos/7/x86_64/
+      gpgkey: https://nginx.org/keys/nginx_signing.key
+      gpgcheck: yes
+      repo_gpgcheck: yes
+      sslverify: yes
+      sslcacert: /etc/pki/tls/certs/ca-bundle.crt
+    become: yes
+
+  - name: Install specific version of Nginx
+    yum:
+      name: nginx-{{ nginx_version }}.el7.ngx
+      state: present
+    become: yes
+
+  - name: Copy Nginx config
+    template:
+      src: ./nginx.conf
+      dest: /etc/nginx/nginx.conf
+    become: yes
+
+  - name: Install epel
+    command: amazon-linux-extras install epel -y
+    become: yes
+
+  - name: Make sure we can use htpasswd module
+    yum:
+      name: python2-passlib
+      state: present
+    become: yes
+
+  - name: Create password file
+    htpasswd:
+      path: /etc/nginx/.htpasswd
+      name: admin
+      password: Azendius97
+    become: yes
+
+  # Start Nginx service
+  - name: configure systemd to use service
+    systemd:
+      daemon_reload: yes
+      enabled: yes
+      state: restarted
+      name: nginx
+    become: yes

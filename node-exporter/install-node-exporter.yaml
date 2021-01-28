@@ -1,0 +1,65 @@
+---
+#
+# Installing Node Exporter
+#
+- hosts: tag_Name_{{ env }}_centralized_logs_{{ server_type }}
+  remote_user: ec2-user
+  vars_files:
+    - ../../output.yml
+  vars:
+    node_exporter_version: 0.14.0
+  tasks:
+    - name: create group
+      group:
+        name: node-exporter
+        state: present
+      become: yes
+
+    - name: create user
+      user:
+        name: node-exporter
+        group: node-exporter
+        createhome: no
+        system: yes
+        state: present
+      become: yes
+
+    - name: create opt directory
+      file:
+        path: /opt/prometheus
+        state: directory
+      become: yes
+
+    - name: download node exporter
+      get_url:
+        url: https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz
+        dest: /opt/prometheus
+      become: yes
+
+    - name: unarchive node exporter
+      unarchive:
+        remote_src: yes
+        src: /opt/prometheus/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz
+        dest: /opt/prometheus
+      become: yes
+
+    - name: create symlink to node exporter
+      file:
+        path: /usr/bin/node_exporter
+        state: link
+        src: /opt/prometheus/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter
+      become: yes
+
+    - name: install unit file to systemd
+      template:
+        src: node-exporter.service
+        dest: /etc/systemd/system/node_exporter.service
+      become: yes
+
+    - name: configure systemd to use service
+      systemd:
+        daemon_reload: yes
+        enabled: yes
+        state: restarted
+        name: node_exporter.service
+      become: yes

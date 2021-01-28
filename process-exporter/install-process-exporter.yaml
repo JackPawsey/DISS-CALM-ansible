@@ -1,0 +1,64 @@
+---
+
+# Installing Process Exporter
+- hosts: tag_Name_{{ env }}_centralized_logs_{{ server_type }}
+  remote_user: ec2-user
+  vars_files:
+    - ../../output.yml
+  vars:
+    process_exporter_version: 0.7.2
+  tasks:
+    - name: create group
+      group:
+        name: process-exporter
+        state: present
+      become: yes
+
+    - name: create user
+      user:
+        name: process-exporter
+        group: process-exporter
+        createhome: no
+        system: yes
+        state: present
+      become: yes
+
+    - name: create opt directory
+      file:
+        path: /opt/prometheus
+        state: directory
+      become: yes
+
+    - name: download process exporter
+      get_url:
+        url: https://github.com/ncabatoff/process-exporter/releases/download/v{{ process_exporter_version }}/process-exporter-{{ process_exporter_version }}.linux-amd64.tar.gz
+        dest: /opt/prometheus
+      become: yes
+
+    - name: unarchive process exporter
+      unarchive:
+        remote_src: yes
+        src: /opt/prometheus/process-exporter-{{ process_exporter_version }}.linux-amd64.tar.gz
+        dest: /opt/prometheus
+      become: yes
+
+    - name: create symlink to process exporter
+      file:
+        path: /usr/bin/process_exporter
+        state: link
+        src: /opt/prometheus/process-exporter-{{ process_exporter_version }}.linux-amd64/process-exporter
+      become: yes
+
+    - name: install unit file to systemd
+      template:
+        src: process-exporter.service
+        dest: /etc/systemd/system/process_exporter.service
+      become: yes
+
+    - name: configure systemd to use service
+      systemd:
+        daemon_reload: yes
+        enabled: yes
+        state: restarted
+        name: process_exporter.service
+      become: yes

@@ -1,0 +1,77 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    metrics_path: /prometheus/metrics
+    scrape_interval: 5s
+    basic_auth:
+      username: admin
+      password: Azendius97
+    static_configs:
+      - targets: ['localhost']
+
+  - job_name: 'EC2 Node Exporter'
+    ec2_sd_configs:
+      - region: eu-west-1
+        port: 9100
+
+    relabel_configs:
+      - source_labels: [__meta_ec2_tag_Name] # Only monitor instances with Name starting with "ENV-"
+        regex: {{ env }}-.*
+        action: keep
+      - source_labels: [__meta_ec2_tag_Name] # Use the Tag Name as the instance label
+        target_label: instance
+
+  - job_name: 'EC2 Process Exporter'
+    ec2_sd_configs:
+      - region: eu-west-1
+        port: 9256
+
+    relabel_configs:
+      - source_labels: [__meta_ec2_tag_Name] # Only monitor instances with Name starting with "ENV-"
+        regex: {{ env }}-.*
+        action: keep
+      - source_labels: [__meta_ec2_tag_Name] # Use the Tag Name as the instance label
+        target_label: instance
+
+  - job_name: 'Alertmanager'
+    metrics_path: /alertmanager/metrics
+    basic_auth:
+      username: admin
+      password: Azendius97
+    ec2_sd_configs:
+      - region: eu-west-1
+        port: 80
+        filters:
+            - name: tag:Name
+              values:
+                - '*Alertmanager*'
+                - '*alertmanager*'
+
+    relabel_configs:
+      - source_labels: [__meta_ec2_tag_Name] # Only monitor instances with Name starting with "ENV-"
+        regex: {{ env }}-.*
+        action: keep
+      - source_labels: [__meta_ec2_tag_Name] # Use the Tag Name as the instance label
+        target_label: instance
+
+rule_files:
+  - 'default-alerts.yml'
+  - 'oncall-alerts.yml'
+
+alerting:
+  alertmanagers:
+    - scheme: http
+      path_prefix: /alertmanager
+      basic_auth:
+        username: admin
+        password: Azendius97
+      ec2_sd_configs:
+        - region: eu-west-1
+          port: 80
+          filters:
+            - name: tag:Name
+              values:
+                - '*Alertmanager*'
+                - '*alertmanager*'

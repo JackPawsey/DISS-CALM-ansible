@@ -1,0 +1,9 @@
+[Unit]
+Description=Service which runs Process Exporter for Prometheus scraping
+ 
+[Service]
+User=process-exporter
+ExecStart=/usr/bin/process_exporter
+ 
+[Install]
+WantedBy=multi-user.target

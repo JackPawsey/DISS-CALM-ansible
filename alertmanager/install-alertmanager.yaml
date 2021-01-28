@@ -1,0 +1,115 @@
+---
+# Add Node Exporter
+- import_playbook: ../node-exporter/install-node-exporter.yaml server_type='Alertmanager'
+
+# Add Process Exporter
+- import_playbook: ../process-exporter/install-process-exporter.yaml server_type='Alertmanager'
+
+# Add Nginx
+- import_playbook: ../nginx/install-nginx.yaml port='9093' server_type='Alertmanager'
+
+# Installing Alertmanager
+- hosts: tag_Name_{{ env }}_centralized_logs_Alertmanager
+  remote_user: ec2-user
+  vars_files:
+    - ../../output.yml
+  vars:
+    alertmanager_version: 0.21.0
+    default_mailbox: "{{ env }}.calm.alerts@gmail.com"
+    oncall_mailbox: "{{ env }}.calm.oncall@gmail.com"
+    alerts_password: "{{ 'eqhafswuyshoaeoa' if env == 'staging' else 'calokoybrxaewcux' }}"
+    oncall_password: "{{ 'jfedoeurpvybpmiq' if env == 'staging' else 'iynkhyvmpbycyvao' }}"
+  tasks:
+    - name: create group
+      group:
+        name: alertmanager
+        state: present
+      become: yes
+
+    - name: create user
+      user:
+        name: alertmanager
+        group: alertmanager
+        createhome: no
+        system: yes
+        state: present
+      become: yes
+
+    - name: create directories for alertmanager
+      file:
+        path: /etc/alertmanager
+        state: directory
+      become: yes
+
+    - name: create directories for alertmanager
+      file:
+        path: /data/alertmanager
+        state: directory
+      become: yes
+
+    - name: Change file ownership, group and permissions
+      file:
+        path: /etc/alertmanager
+        owner: alertmanager
+        group: alertmanager
+      become: yes
+
+    - name: Change file ownership, group and permissions
+      file:
+        path: /data/alertmanager
+        owner: alertmanager
+        group: alertmanager
+      become: yes
+
+    - name: download alertmanager
+      get_url:
+        url: https://github.com/prometheus/alertmanager/releases/download/v{{ alertmanager_version }}/alertmanager-{{ alertmanager_version }}.linux-amd64.tar.gz
+        dest: /tmp
+      become: yes
+
+    - name: unarchive alertmanager
+      unarchive:
+        remote_src: yes
+        src: /tmp/alertmanager-{{ alertmanager_version }}.linux-amd64.tar.gz
+        dest: /tmp
+      become: yes
+
+    - name: Copy Alertmanager binary
+      copy:
+        remote_src: yes
+        src: /tmp/alertmanager-{{ alertmanager_version }}.linux-amd64/alertmanager
+        dest: /usr/local/bin
+        owner: alertmanager
+        group: alertmanager
+        mode: '0770'
+      become: yes
+
+    - name: Copy amtool binary
+      copy:
+        remote_src: yes
+        src: /tmp/alertmanager-{{ alertmanager_version }}.linux-amd64/amtool
+        dest: /usr/local/bin
+        owner: alertmanager
+        group: alertmanager
+        mode: '0770'
+      become: yes
+  
+    - name: Copy config file
+      template:
+        src: ./alertmanager.yml
+        dest: /etc/alertmanager/alertmanager.yml
+      become: yes
+
+    - name: install unit file to systemd
+      template:
+        src: alertmanager.service
+        dest: /etc/systemd/system/alertmanager.service
+      become: yes
+
+    - name: configure systemd to use service
+      systemd:
+        daemon_reload: yes
+        enabled: yes
+        state: restarted
+        name: alertmanager.service
+      become: yes

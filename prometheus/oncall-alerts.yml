@@ -1,0 +1,108 @@
+groups:
+  - name: default
+    rules:
+    - alert: InstanceDown
+      expr: up == 0
+      for: 5m
+      labels:
+        severity: critical
+        type: out-of-hours
+      annotations:
+        summary: "Instance {{ $labels.instance }} down"
+        description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes."
+
+  - name: EC2 Host
+    rules:
+    - alert: HostOutOfMemory
+      expr: node_memory_MemAvailable / node_memory_MemTotal * 100 < 10
+      for: 5m
+      labels:
+        severity: critical
+        type: out-of-hours
+      annotations:
+        summary: "Host out of memory (instance {{ $labels.instance }})"
+        description: "Node memory is filling up (< 10% left)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+    - alert: HostOutOfDiskSpace
+      expr: (node_filesystem_avail{mountpoint="/"}  * 100) / node_filesystem_size{mountpoint="/"} < 10
+      for: 5m
+      labels:
+        severity: critical
+        type: out-of-hours
+      annotations:
+        summary: "Host out of disk space (instance {{ $labels.instance }})"
+        description: "Disk is almost full (< 10% left)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+    - alert: HostMemoryUnderMemoryPressure
+      expr: rate(node_vmstat_pgmajfault[1m]) > 1000
+      for: 5m
+      labels:
+        severity: critical
+        type: out-of-hours
+      annotations:
+        summary: "Host memory under memory pressure (instance {{ $labels.instance }})"
+        description: "The node is under heavy memory pressure. High rate of major page faults\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+    - alert: HostUnusualNetworkThroughputIn
+      expr: sum by (instance) (irate(node_network_receive_bytes[2m])) / 1024 / 1024 > 100
+      for: 5m
+      labels:
+        severity: warning
+        type: out-of-hours
+      annotations:
+        summary: "Host unusual network throughput in (instance {{ $labels.instance }})"
+        description: "Host network interfaces are probably receiving too much data (> 100 MB/s)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+    - alert: HostUnusualNetworkThroughputOut
+      expr: sum by (instance) (irate(node_network_transmit_bytes[2m])) / 1024 / 1024 > 100
+      for: 5m
+      labels:
+        severity: warning
+        type: out-of-hours
+      annotations:
+        summary: "Host unusual network throughput out (instance {{ $labels.instance }})"
+        description: "Host network interfaces are probably sending too much data (> 100 MB/s)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+    - alert: HostUnusualDiskReadRate
+      expr: sum by (instance) (irate(node_disk_bytes_read[2m])) / 1024 / 1024 > 50
+      for: 5m
+      labels:
+        severity: critical
+        type: out-of-hours
+      annotations:
+        summary: "Host unusual disk read rate (instance {{ $labels.instance }})"
+        description: "Disk is probably reading too much data (> 50 MB/s)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+    - alert: HostUnusualDiskWriteRate
+      expr: sum by (instance) (irate(node_disk_bytes_written[2m])) / 1024 / 1024 > 50
+      for: 5m
+      labels:
+        severity: critical
+        type: out-of-hours
+      annotations:
+        summary: "Host unusual disk write rate (instance {{ $labels.instance }})"
+        description: "Disk is probably writing too much data (> 50 MB/s)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+    - alert: HostHighCpuLoad
+      expr: 100 - (avg by(instance) (irate(node_cpu{mode="idle"}[5m])) * 100) > 0
+      for: 5m
+      labels:
+        severity: critical
+        type: out-of-hours
+      annotations:
+        summary: "Host high CPU load (instance {{ $labels.instance }})"
+        description: "CPU load is > 80%\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+### experimental ###############################################################################################################################
+
+    - alert: HostDiskWillFillIn1Hour
+      expr: predict_linear(node_filesystem_free{fstype!~"tmpfs"}[1h], 1 * 3600) < 0
+      for: 5m
+      labels:
+        severity: critical
+        type: out-of-hours
+      annotations:
+        summary: "Host disk will fill in 1 hours (instance {{ $labels.instance }})"
+        description: "Disk will fill in 1 hours at current write rate\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+#################################################################################################################################################

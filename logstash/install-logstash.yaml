@@ -1,0 +1,86 @@
+---
+# Add Node Exporter
+- import_playbook: ../node-exporter/node-exporter.yaml server_type='Logstash'
+
+# Add Process Exporter
+- import_playbook: ../process-exporter/process-exporter.yaml server_type='Logstash'
+
+# Installing logstash
+- hosts: tag_Name_{{ env }}_centralized_logs_Logstash
+  remote_user: ec2-user
+  vars_files:
+    - ../../output.yml
+  tasks:
+  - name: Enable amazon corretto8
+    command: amazon-linux-extras enable corretto8
+    become: yes
+
+  - name: Install amazon corretto8
+    yum:
+     name: java-1.8.0-amazon-corretto
+     state: present
+    become: yes
+
+  - rpm_key:
+      state: present
+      key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    become: yes
+
+  - name: Add Elastic repository
+    yum_repository:
+      name: Logstash
+      description: Logstash repository
+      baseurl: https://artifacts.elastic.co/packages/7.x/yum
+      gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+      gpgcheck: yes
+      repo_gpgcheck: yes
+      sslverify: yes
+      sslcacert: /etc/pki/tls/certs/ca-bundle.crt
+    become: yes
+
+  - name: Install specific version of Logstash
+    yum:
+      name: logstash
+      state: present
+    become: yes
+
+  - name: Install amazon_es output plugin
+    logstash_plugin:
+      state: present
+      name: logstash-output-amazon_es
+    become: yes
+
+  - name: Copy logstash pipeline config file
+    template:
+      src: ./pipeline.conf
+      dest: /etc/logstash/conf.d/pipeline.conf
+    become: yes
+
+# Creating certs directories for SSL
+  - name: Creates SSL directories
+    file:
+      path: /etc/pki/tls/certs
+      state: directory
+
+# Creating private directories for SSL
+  - name: Creates SSL directories
+    file:
+      path: /etc/pki/tls/private
+      state: directory
+
+# Start Logstash service
+  - name: Start Logstash service
+    systemd:
+      name: logstash
+      state: started
+      daemon_reload: yes
+    become: yes
+
+# Enable Logstash service
+  - name: Enable Logstash service
+    systemd:
+      name: logstash
+      enabled: yes
+      state: restarted
+      daemon_reload: yes
+    become: yes

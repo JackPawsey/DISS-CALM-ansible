@@ -1,0 +1,88 @@
+---
+# Add Node Exporter
+- import_playbook: ../node-exporter/node-exporter.yaml server_type='Grafana'
+
+# Add Process Exporter
+- import_playbook: ../process-exporter/process-exporter.yaml server_type='Grafana'
+
+# Installing Grafana
+- hosts: tag_Name_{{ env }}_centralized_logs_Grafana
+  remote_user: ec2-user
+  vars_files:
+    - ../../output.yml
+  vars:
+    grafana_version: 7.1.5-1
+  tasks:
+  - name: Add Grafana repository
+    yum_repository:
+      name: Grafana
+      description: Grafana repository
+      baseurl: https://packages.grafana.com/oss/rpm
+      gpgkey: https://packages.grafana.com/gpg.key
+      gpgcheck: yes
+      repo_gpgcheck: yes
+      sslverify: yes
+      sslcacert: /etc/pki/tls/certs/ca-bundle.crt
+    become: yes
+
+  - name: Install specific version of Grafana
+    yum:
+      name: grafana-{{ grafana_version }}.x86_64
+      state: present
+    become: yes
+
+  - name: Copy Grafana config file
+    template:
+      src: ./grafana.ini
+      dest: /etc/grafana/grafana.ini
+    become: yes
+
+  - name: create directories for dashboards
+    file:
+      path: /var/lib/grafana/dashboards
+      state: directory
+    become: yes
+
+  - name: Copy Grafana dashboard
+    copy:
+      src: ./dashboard.json
+      dest: /var/lib/grafana/dashboards/dashboard.json
+    become: yes
+
+  - name: Copy Grafana dashboards config
+    copy:
+      src: ./dashboard.yaml
+      dest: /etc/grafana/provisioning/dashboards/dashboard.yaml
+    become: yes
+
+  # Start Grafana service
+  - name: configure systemd to use service
+    systemd:
+      daemon_reload: yes
+      enabled: yes
+      state: restarted
+      name: grafana-server
+    become: yes
+
+  - name: Create Prometheus datasource
+    grafana_datasource:
+      name: prometheus-datasource
+      grafana_url: "http://{{ ansible_ssh_host }}:3000"
+      grafana_user: "admin"
+      grafana_password: "Azendius97"
+      ds_type: "prometheus"
+      url: "http://{{ prometheus_instance_ip }}/prometheus"
+      basic_auth_user: "admin"
+      basic_auth_password: "Azendius97"
+      state: present
+
+  #- name: Import Grafana dashboard
+  #  grafana_dashboard:
+  #    grafana_url: "http://{{ ansible_ssh_host }}:3000"
+  #    grafana_user: "admin"
+  #    grafana_password: "Azendius97"
+  #    state: present
+  #    message: Updated by ansible
+  #    overwrite: yes
+  #    path: /etc/grafana/dashboard.json
+  #  become: yes

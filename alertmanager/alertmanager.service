@@ -1,0 +1,19 @@
+[Unit]
+Description=Alert Manager
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=alertmanager
+Group=alertmanager
+ExecStart=/usr/local/bin/alertmanager \
+  --config.file=/etc/alertmanager/alertmanager.yml \
+  --storage.path=/data/alertmanager \
+  --web.external-url=http://alertmanager-{{ env }}.simplycalm.net/alertmanager \
+  --web.route-prefix=alertmanager
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

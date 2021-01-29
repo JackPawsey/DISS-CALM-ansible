@@ -1,9 +1,9 @@
 ---
 # Add Node Exporter
-- import_playbook: ../node-exporter/node-exporter.yaml server_type='Grafana'
+- import_playbook: ../node-exporter/install-node-exporter.yaml server_type='Grafana'
 
 # Add Process Exporter
-- import_playbook: ../process-exporter/process-exporter.yaml server_type='Grafana'
+- import_playbook: ../process-exporter/install-process-exporter.yaml server_type='Grafana'
 
 # Installing Grafana
 - hosts: tag_Name_{{ env }}_centralized_logs_Grafana

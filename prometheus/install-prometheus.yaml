@@ -9,7 +9,7 @@
 - import_playbook: ../nginx/install-nginx.yaml port='9090' server_type='Prometheus'
 
 # Installing Prometheus
-- hosts: tag_Name_{{ env }}_centralized_logs_Prometheus
+- hosts: tag_Name_{{ env }}_calm_Prometheus
   remote_user: ec2-user
   vars_files:
     - ../../output.yml

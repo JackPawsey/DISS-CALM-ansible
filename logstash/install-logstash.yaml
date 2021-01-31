@@ -6,7 +6,7 @@
 - import_playbook: ../process-exporter/install-process-exporter.yaml server_type='Logstash'
 
 # Installing logstash
-- hosts: tag_Name_{{ env }}_centralized_logs_Logstash
+- hosts: tag_Name_{{ env }}_calm_Logstash
   remote_user: ec2-user
   vars_files:
     - ../../output.yml

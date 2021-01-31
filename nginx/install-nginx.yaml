@@ -1,5 +1,5 @@
 # Installing Nginx
-- hosts: tag_Name_{{ env }}_centralized_logs_{{ server_type }}
+- hosts: tag_Name_{{ env }}_calm_{{ server_type }}
   remote_user: ec2-user
   vars_files:
     - ../../output.yml

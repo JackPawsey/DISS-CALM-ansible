@@ -9,7 +9,7 @@
 - import_playbook: ../nginx/install-nginx.yaml port='9093' server_type='Alertmanager'
 
 # Installing Alertmanager
-- hosts: tag_Name_{{ env }}_centralized_logs_Alertmanager
+- hosts: tag_Name_{{ env }}_calm_Alertmanager
   remote_user: ec2-user
   vars_files:
     - ../../output.yml

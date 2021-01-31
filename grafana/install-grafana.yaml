@@ -6,7 +6,7 @@
 - import_playbook: ../process-exporter/install-process-exporter.yaml server_type='Grafana'
 
 # Installing Grafana
-- hosts: tag_Name_{{ env }}_centralized_logs_Grafana
+- hosts: tag_Name_{{ env }}_calm_Grafana
   remote_user: ec2-user
   vars_files:
     - ../../output.yml

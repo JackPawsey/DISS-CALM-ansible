@@ -4,7 +4,7 @@ metrics:
 
 - aws_namespace: AWS/ES
   aws_metric_name: CPUUtilization
-  aws_dimensions: [DomainName]
+  aws_dimensions: [DomainName, ClientId]
   aws_statistics: [Average]
 
 # S3 Storage metrics are published to Cloudwatch 1x per day with a timestamp of midnight UTC, hence period_seconds: 86400

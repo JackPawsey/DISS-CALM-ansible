@@ -1,15 +1,15 @@
 ---
 # Add Node Exporter
-- import_playbook: ../node-exporter/install-node-exporter.yaml server_type='Alertmanager'
+- import_playbook: ../node-exporter/install-node-exporter.yaml ip={{ alertmanager_instance_ip }}
 
 # Add Process Exporter
-- import_playbook: ../process-exporter/install-process-exporter.yaml server_type='Alertmanager'
+- import_playbook: ../process-exporter/install-process-exporter.yaml ip={{ alertmanager_instance_ip }}
 
 # Add Nginx
-- import_playbook: ../nginx/install-nginx.yaml port='9093' server_type='Alertmanager'
+- import_playbook: ../nginx/install-nginx.yaml ip={{ alertmanager_instance_ip }} port='9093' application='prometheus'
 
 # Installing Alertmanager
-- hosts: tag_Name_{{ env }}_calm_Alertmanager
+- hosts: "{{ alertmanager_instance_ip }}"
   remote_user: ec2-user
   vars_files:
     - ../../output.yml

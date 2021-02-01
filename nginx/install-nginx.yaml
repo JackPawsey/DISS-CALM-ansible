@@ -1,15 +1,11 @@
 # Installing Nginx
-- hosts: tag_Name_{{ env }}_calm_{{ server_type }}
+- hosts: "{{ ip }}"
   remote_user: ec2-user
   vars_files:
     - ../../output.yml
   vars:
     nginx_version: 1.18.0-1
-    application: "{{ server_type | lower }}"
   tasks:
-  - debug:
-      var: application
-
   - name: Add Nginx repository
     yum_repository:
       name: Nginx

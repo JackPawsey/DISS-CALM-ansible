@@ -7,7 +7,7 @@
 
 # Installing Grafana
 #- hosts: tag_Name_{{ env }}_calm_Grafana
-- hosts: {{ grafana_instance_ip }}
+- hosts: "{{ grafana_instance_ip }}"
   remote_user: ec2-user
   vars_files:
     - ../../output.yml

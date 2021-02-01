@@ -1,0 +1,58 @@
+---
+#
+# Installing Cloudwatch Exporter
+#
+- hosts: "{{ ip }}"
+  remote_user: ec2-user
+  vars_files:
+    - ../../output.yml
+  vars:
+    cloudwatch_exporter_version: 0.10.0
+  tasks:
+    - name: create group
+      group:
+        name: cloudwatch-exporter
+        state: present
+      become: yes
+
+    - name: create user
+      user:
+        name: cloudwatch-exporter
+        group: cloudwatch-exporter
+        createhome: no
+        system: yes
+        state: present
+      become: yes
+
+    - name: create opt directory
+      file:
+        path: /opt/prometheus
+        state: directory
+      become: yes
+
+    - name: download node exporter
+      get_url:
+        url: https://search.maven.org/remotecontent?filepath=io/prometheus/cloudwatch/cloudwatch_exporter/{{ cloudwatch_exporter_version }}/cloudwatch_exporter-{{ cloudwatch_exporter_version }}-jar-with-dependencies.jar
+        dest: /opt/prometheus
+      become: yes
+
+    - name: create symlink to node exporter
+      file:
+        path: /usr/bin/node_exporter
+        state: link
+        src: /opt/prometheus/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter
+      become: yes
+
+    - name: install unit file to systemd
+      template:
+        src: node-exporter.service
+        dest: /etc/systemd/system/cloudwatch_exporter.service
+      become: yes
+
+    - name: configure systemd to use service
+      systemd:
+        daemon_reload: yes
+        enabled: yes
+        state: restarted
+        name: cloudwatch_exporter.service
+      become: yes

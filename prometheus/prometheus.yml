@@ -14,6 +14,7 @@ scrape_configs:
   - job_name: 'Cloudwatch Exporter'
     metrics_path: /metrics
     scrape_interval: 5s
+    honor_timestamps: false
     static_configs:
       - targets: ['localhost:9106']
 

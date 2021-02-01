@@ -46,16 +46,21 @@
         dest: /opt/prometheus
       become: yes
 
-    - name: create symlink to cloudwatch exporter
-      file:
-        path: /usr/bin/cloudwatch_exporter
-        state: link
-        src: /opt/prometheus/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter
+    - name: Copy cloudwatch exporter shell script
+      copy:
+        src: ./cloudwatch_exporter.sh
+        dest: /usr/local/bin/cloudwatch_exporter.sh
+      become: yes
+
+    - name: Copy cloudwatch exporter config
+      copy:
+        src: ./cloudwatch_exporter_config.yaml
+        dest: /opt/prometheus/cloudwatch_exporter_config.yaml
       become: yes
 
     - name: install unit file to systemd
-      template:
-        src: node-exporter.service
+      copy:
+        src: cloudwatch_exporter.service
         dest: /etc/systemd/system/cloudwatch_exporter.service
       become: yes
 

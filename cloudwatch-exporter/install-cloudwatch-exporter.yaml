@@ -30,15 +30,15 @@
         state: directory
       become: yes
 
-    - name: download node exporter
+    - name: download cloudwatch exporter
       get_url:
         url: https://search.maven.org/remotecontent?filepath=io/prometheus/cloudwatch/cloudwatch_exporter/{{ cloudwatch_exporter_version }}/cloudwatch_exporter-{{ cloudwatch_exporter_version }}-jar-with-dependencies.jar
         dest: /opt/prometheus
       become: yes
 
-    - name: create symlink to node exporter
+    - name: create symlink to cloudwatch exporter
       file:
-        path: /usr/bin/node_exporter
+        path: /usr/bin/cloudwatch_exporter
         state: link
         src: /opt/prometheus/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter
       become: yes

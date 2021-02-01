@@ -50,6 +50,7 @@
       copy:
         src: ./cloudwatch_exporter.sh
         dest: /usr/local/bin/cloudwatch_exporter.sh
+        mode: a+x
       become: yes
 
     - name: Copy cloudwatch exporter config

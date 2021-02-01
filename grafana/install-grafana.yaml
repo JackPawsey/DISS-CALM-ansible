@@ -1,12 +1,13 @@
 ---
 # Add Node Exporter
-- import_playbook: ../node-exporter/install-node-exporter.yaml server_type='Grafana'
+- import_playbook: ../node-exporter/install-node-exporter.yaml ip={{ grafana_instance_ip }}
 
 # Add Process Exporter
 - import_playbook: ../process-exporter/install-process-exporter.yaml server_type='Grafana'
 
 # Installing Grafana
-- hosts: tag_Name_{{ env }}_calm_Grafana
+#- hosts: tag_Name_{{ env }}_calm_Grafana
+- hosts: {{ grafana_instance_ip }}
   remote_user: ec2-user
   vars_files:
     - ../../output.yml
@@ -43,10 +44,34 @@
       state: directory
     become: yes
 
-  - name: Copy Grafana dashboard
+  - name: Copy calm dashboard
     copy:
-      src: ./dashboard.json
-      dest: /var/lib/grafana/dashboards/dashboard.json
+      src: ./calm-dashboard.json
+      dest: /var/lib/grafana/dashboards/calm-dashboard.json
+    become: yes
+
+  - name: Copy network dashboard
+    copy:
+      src: ./network-dashboard.json
+      dest: /var/lib/grafana/dashboards/network-dashboard.json
+    become: yes
+
+  - name: Copy node exporter dashboard
+    copy:
+      src: ./node-exporter-dashboard.json
+      dest: /var/lib/grafana/dashboards/node-exporter-dashboard.json
+    become: yes
+
+  - name: Copy process dashboard
+    copy:
+      src: ./process-dashboard.json
+      dest: /var/lib/grafana/dashboards/process-dashboard.json
+    become: yes
+
+  - name: Copy storage dashboard
+    copy:
+      src: ./storage-dashboard.json
+      dest: /var/lib/grafana/dashboards/storage-dashboard.json
     become: yes
 
   - name: Copy Grafana dashboards config

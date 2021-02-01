@@ -1,12 +1,12 @@
 ---
 # Add Node Exporter
-- import_playbook: ../node-exporter/install-node-exporter.yaml server_type='Logstash'
+- import_playbook: ../node-exporter/install-node-exporter.yaml ip={{ logstash_instance_ip }}
 
 # Add Process Exporter
-- import_playbook: ../process-exporter/install-process-exporter.yaml server_type='Logstash'
+- import_playbook: ../process-exporter/install-process-exporter.yaml ip={{ logstash_instance_ip }}
 
 # Installing logstash
-- hosts: tag_Name_{{ env }}_calm_Logstash
+- hosts: "{{ logstash_instance_ip }}"
   remote_user: ec2-user
   vars_files:
     - ../../output.yml

@@ -6,7 +6,7 @@
 - import_playbook: ../process-exporter/install-process-exporter.yaml ip={{ prometheus_instance_ip }}
 
 # Add Nginx
-- import_playbook: ../nginx/install-nginx.yaml ip={{ prometheus_instance_ip }} port='9090' server_type='Prometheus'
+- import_playbook: ../nginx/install-nginx.yaml ip={{ prometheus_instance_ip }} port='9090' application='prometheus'
 
 # Installing Prometheus
 - hosts: "{{ prometheus_instance_ip }}"

@@ -17,7 +17,7 @@
       yum:
         name: java-1.8.0-amazon-corretto
         state: present
-        become: yes
+      become: yes
 
     - name: create group
       group:

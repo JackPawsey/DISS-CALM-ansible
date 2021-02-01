@@ -6,7 +6,7 @@
 - import_playbook: ../process-exporter/install-process-exporter.yaml ip={{ alertmanager_instance_ip }}
 
 # Add Nginx
-- import_playbook: ../nginx/install-nginx.yaml ip={{ alertmanager_instance_ip }} port='9093' application='prometheus'
+- import_playbook: ../nginx/install-nginx.yaml ip={{ alertmanager_instance_ip }} port='9093' application='alertmanager'
 
 # Installing Alertmanager
 - hosts: "{{ alertmanager_instance_ip }}"

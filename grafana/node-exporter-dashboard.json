@@ -2671,7 +2671,7 @@
       "type": "row"
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "datasource": "prometheus-datasource",
       "gridPos": {
         "h": 1,
@@ -4695,7 +4695,7 @@
       }
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "datasource": "prometheus-datasource",
       "gridPos": {
         "h": 1,
@@ -5197,7 +5197,7 @@
       }
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "datasource": "prometheus-datasource",
       "gridPos": {
         "h": 1,
@@ -5538,7 +5538,7 @@
       }
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "datasource": "prometheus-datasource",
       "gridPos": {
         "h": 1,
@@ -6086,7 +6086,7 @@
       }
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "datasource": "prometheus-datasource",
       "gridPos": {
         "h": 1,
@@ -7438,7 +7438,7 @@
       }
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "datasource": "prometheus-datasource",
       "gridPos": {
         "h": 1,
@@ -8000,7 +8000,7 @@
       }
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "datasource": "prometheus-datasource",
       "gridPos": {
         "h": 1,
@@ -8825,7 +8825,7 @@
       }
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "datasource": "prometheus-datasource",
       "gridPos": {
         "h": 1,
@@ -9432,7 +9432,7 @@
       }
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "datasource": "prometheus-datasource",
       "gridPos": {
         "h": 1,
@@ -10786,7 +10786,7 @@
       }
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "datasource": "prometheus-datasource",
       "gridPos": {
         "h": 1,

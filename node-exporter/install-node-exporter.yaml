@@ -3,7 +3,7 @@
 # Installing Node Exporter
 #
 #- hosts: tag_Name_{{ env }}_calm_{{ server_type }}
-- hosts: {{ ip }}
+- hosts: "{{ ip }}"
   remote_user: ec2-user
   vars_files:
     - ../../output.yml

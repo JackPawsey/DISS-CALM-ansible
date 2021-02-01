@@ -9,6 +9,16 @@
   vars:
     cloudwatch_exporter_version: 0.10.0
   tasks:
+    - name: Enable amazon corretto8
+      command: amazon-linux-extras enable corretto8
+      become: yes
+
+    - name: Install amazon corretto8
+      yum:
+        name: java-1.8.0-amazon-corretto
+        state: present
+        become: yes
+
     - name: create group
       group:
         name: cloudwatch-exporter

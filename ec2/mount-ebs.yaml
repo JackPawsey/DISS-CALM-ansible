@@ -8,7 +8,7 @@
     - ../../output.yml
   tasks:
     - name: Make xfs filesystem in EBS
-      command: mkfs -t xfs /dev/xvdf
+      command: mkfs -t xfs -f /dev/xvdf
       become: yes
 
     - name: Make directory to mount

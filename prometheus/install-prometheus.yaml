@@ -59,7 +59,7 @@
 
     - name: Change file ownership, group and permissions
       file:
-        path: /var/lib/prometheus
+        path: "{{ prometheus_db_location }}"
         owner: prometheus
         group: prometheus
       become: yes

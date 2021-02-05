@@ -1,0 +1,18 @@
+---
+#
+# Mount EBS volume to EC2 filesystem
+#
+- hosts: "{{ ip }}"
+  remote_user: ec2-user
+  tasks:
+    - name: Make xfs filesystem in EBS
+      command: mkfs -t xfs /dev/xvdf
+      become: yes
+
+    - name: Make directory to mount
+      command: mkdir /data
+      become: yes
+
+    - name: Mount filesystem to directory
+      command: /dev/xvdf /data
+      become: yes

@@ -3,7 +3,7 @@
 - import_playbook: ../node-exporter/install-node-exporter.yaml ip={{ grafana_instance_ip }}
 
 # Add Process Exporter
-- import_playbook: ../process-exporter/install-process-exporter.yaml server_type='Grafana'
+- import_playbook: ../process-exporter/install-process-exporter.yaml ip={{ grafana_instance_ip }}
 
 # Installing Grafana
 #- hosts: tag_Name_{{ env }}_calm_Grafana

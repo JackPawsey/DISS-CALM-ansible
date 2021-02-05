@@ -13,7 +13,7 @@
 
     - name: Make directory to mount
       file:
-        path: {{ mount_location }}
+        path: "{{ mount_location }}"
         state: directory
 
     - name: Mount filesystem to directory

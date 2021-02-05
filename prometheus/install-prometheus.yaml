@@ -1,6 +1,6 @@
 ---
 # Mount EBS to filesystem
-- import_playbook: ../ec2/mount-ebs.yaml ip={{ prometheus_instance_ip }} mount_location={{ prometheus_db_location }}
+- import_playbook: ../ec2/mount-ebs.yaml ip={{ prometheus_instance_ip }} mount_location={{ /data }}
 
 # Add Node Exporter
 - import_playbook: ../node-exporter/install-node-exporter.yaml ip={{ prometheus_instance_ip }}

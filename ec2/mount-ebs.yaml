@@ -16,6 +16,14 @@
         path: "{{ mount_location }}"
         state: directory
 
+    #- name: Mount filesystem to directory
+    #  command: mount /dev/xvdf {{ mount_location }}
+    #  become: yes
+
     - name: Mount filesystem to directory
-      command: mount /dev/xvdf {{ mount_location }}
+      mount:
+        path: "{{ mount_location }}"
+        src: /dev/xvdf
+        fstype: xfs
+        state: mounted
       become: yes

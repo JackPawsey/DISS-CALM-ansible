@@ -1,6 +1,6 @@
 ---
 # Mount EBS to filesystem
-- import_playbook: ../ec2/mount-ebs.yaml ip={{ prometheus_instance_ip }} mount_location='/data'
+- import_playbook: ../ec2/mount-ebs.yaml ip={{ prometheus_instance_ip }} mount_location={{ prometheus_db_location }}
 
 # Add Node Exporter
 - import_playbook: ../node-exporter/install-node-exporter.yaml ip={{ prometheus_instance_ip }}
@@ -21,6 +21,7 @@
     - ../../output.yml
   vars:
     prometheus_version: 2.20.1
+    prometheus_db_location: /data
   tasks:
     - name: create group
       group:

@@ -105,4 +105,54 @@ groups:
         summary: "Host disk will fill in 1 hours (instance {{ $labels.instance }})"
         description: "Disk will fill in 1 hours at current write rate\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
 
-#################################################################################################################################################
+### Elasticsearch #####################################################################################################################################
+
+    - alert: ESCPUUtilization
+      expr: aws_es_cpuutilization_average{domain_name="staging-calm-es"} > 90
+      for: 5m
+      labels:
+        severity: warning
+        type: in-hours
+      annotations:
+        summary: "Elasticsearch CPU utilization high"
+        description: "Elasticsearch CPU utilization high\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+    - alert: ESSysMemoryUtilization
+      expr: aws_es_sys_memory_utilization_average{domain_name="staging-calm-es"} > 90
+      for: 5m
+      labels:
+        severity: warning
+        type: in-hours
+      annotations:
+        summary: "Elasticsearch memory utilization high"
+        description: "Elasticsearch memory utilization high\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+    - alert: ESJVMMemoryPressure
+      expr: aws_es_jvmmemory_pressure_average{domain_name="staging-calm-es"} > 90
+      for: 5m
+      labels:
+        severity: warning
+        type: in-hours
+      annotations:
+        summary: "Elasticsearch JVM memory pressure high"
+        description: "Elasticsearch JVM memory pressure high\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+    - alert: ESFreeStorageSpace
+      expr: aws_es_free_storage_space_average{domain_name="staging-calm-es"} < 10
+      for: 5m
+      labels:
+        severity: warning
+        type: in-hours
+      annotations:
+        summary: "Elasticsearch free storage space low"
+        description: "Elasticsearch free storage space low\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+    - alert: ESSearchLatency
+      expr: aws_es_search_latency_average{domain_name="staging-calm-es"} > 1000
+      for: 5m
+      labels:
+        severity: warning
+        type: in-hours
+      annotations:
+        summary: "Elasticsearch search latency high"
+        description: "Elasticsearch search latency high\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"

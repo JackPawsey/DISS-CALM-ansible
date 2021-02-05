@@ -12,9 +12,10 @@
       become: yes
 
     - name: Make directory to mount
-      command: mkdir /data
-      become: yes
+      file:
+        path: {{ mount_location }}
+        state: directory
 
     - name: Mount filesystem to directory
-      command: /dev/xvdf /data
+      command: mount /dev/xvdf {{ mount_location }}
       become: yes

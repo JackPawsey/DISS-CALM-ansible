@@ -21,7 +21,7 @@
     - ../../output.yml
   vars:
     prometheus_version: 2.20.1
-    prometheus_db_location: /data
+    prometheus_db_location: /data/prometheus
   tasks:
     - name: create group
       group:

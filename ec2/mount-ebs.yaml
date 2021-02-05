@@ -4,6 +4,8 @@
 #
 - hosts: "{{ ip }}"
   remote_user: ec2-user
+  vars_files:
+    - ../../output.yml
   tasks:
     - name: Make xfs filesystem in EBS
       command: mkfs -t xfs /dev/xvdf

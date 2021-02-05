@@ -1,4 +1,7 @@
 ---
+# Mount EBS to filesystem
+- import_playbook: ../ec2/mount-ebs.yaml ip={{ logstash_instance_ip }}
+
 # Add Node Exporter
 - import_playbook: ../node-exporter/install-node-exporter.yaml ip={{ logstash_instance_ip }}
 

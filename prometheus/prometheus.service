@@ -9,7 +9,7 @@ Group=prometheus
 Type=simple
 ExecStart=/usr/local/bin/prometheus \
     --config.file /etc/prometheus/prometheus.yml \
-    --storage.tsdb.path /var/lib/prometheus/ \
+    --storage.tsdb.path {{ mount_location }} \
     --web.external-url=http://prometheus-{{ env }}.simplycalm.net/prometheus \
     --web.route-prefix=prometheus
 

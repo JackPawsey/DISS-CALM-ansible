@@ -1,0 +1,26 @@
+filebeat.inputs:
+# The following block is sending every *.log files under
+# /var/log/app-A to the endpoint configured
+# at the end of the file.
+- type: log
+  #processors:
+  #- add_fields:
+  #    # This is where all the fields mentioned above
+  #    # are being added.
+  #    target: 'cl_metadata'
+  #    fields:
+  #      "category": "system"
+  #      "application": "dummy-app1"
+  #      "send_to_es": "true"
+  enabled: true
+  paths:
+    - /var/log/calm/*.log
+
+output.logstash:
+  hosts: ["54.75.43.52:5044"]
+  ttl: 60
+  pipelining: 0
+  loadbalance: true
+  ssl.enabled: false
+
+logging.level: debug

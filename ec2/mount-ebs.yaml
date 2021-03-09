@@ -10,16 +10,7 @@
     - name: Make xfs filesystem in EBS
       command: mkfs -t xfs -f /dev/xvdf
       become: yes
-
-    #- name: Make directory to mount
-    #  file:
-    #    path: "{{ mount_location }}"
-    #    state: directory
-
-    #- name: Mount filesystem to directory
-    #  command: mount /dev/xvdf {{ mount_location }}
-    #  become: yes
-
+      
     - name: Mount filesystem to directory
       mount:
         path: "{{ mount_location }}"

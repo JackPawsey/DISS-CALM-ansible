@@ -54,7 +54,7 @@
       become: yes
 
     - name: Copy cloudwatch exporter config
-      copy:
+      template:
         src: ./cloudwatch_exporter_config.yaml
         dest: /opt/prometheus/cloudwatch_exporter_config.yaml
       become: yes

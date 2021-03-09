@@ -6,13 +6,12 @@
 - import_playbook: ../process-exporter/install-process-exporter.yaml ip={{ grafana_instance_ip }}
 
 # Installing Grafana
-#- hosts: tag_Name_{{ env }}_calm_Grafana
 - hosts: "{{ grafana_instance_ip }}"
   remote_user: ec2-user
   vars_files:
     - ../../output.yml
   vars:
-    grafana_version: 7.4.3 #7.1.5-1
+    grafana_version: 7.1.5-1
   tasks:
   - name: Add Grafana repository
     yum_repository:
@@ -21,7 +20,7 @@
       baseurl: https://packages.grafana.com/oss/rpm
       gpgkey: https://packages.grafana.com/gpg.key
       gpgcheck: yes
-      repo_gpgcheck: yes
+      repo_gpgcheck: no
       sslverify: yes
       sslcacert: /etc/pki/tls/certs/ca-bundle.crt
     become: yes

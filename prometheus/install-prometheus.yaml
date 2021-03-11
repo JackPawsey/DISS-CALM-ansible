@@ -23,13 +23,13 @@
     prometheus_version: 2.20.1
     prometheus_db_location: /data/prometheus
   tasks:
-    - name: create group
+    - name: Create group
       group:
         name: prometheus
         state: present
       become: yes
 
-    - name: create user
+    - name: Create user
       user:
         name: prometheus
         group: prometheus
@@ -38,7 +38,7 @@
         state: present
       become: yes
 
-    - name: cCreate directories for Prometheus
+    - name: Create directories for Prometheus
       file:
         path: /etc/prometheus
         state: directory
@@ -64,13 +64,13 @@
         group: prometheus
       become: yes
 
-    - name: download prometheus
+    - name: Download prometheus
       get_url:
         url: https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz
         dest: /tmp
       become: yes
 
-    - name: unarchive prometheus
+    - name: Unarchive prometheus
       unarchive:
         remote_src: yes
         src: /tmp/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz
@@ -135,13 +135,13 @@
         dest: /etc/prometheus/oncall-alerts.yml
       become: yes
 
-    - name: install unit file to systemd
+    - name: Install unit file to systemd
       template:
         src: prometheus.service
         dest: /etc/systemd/system/prometheus.service
       become: yes
 
-    - name: configure systemd to use service
+    - name: Configure systemd to use service
       systemd:
         daemon_reload: yes
         enabled: yes

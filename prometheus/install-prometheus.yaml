@@ -38,13 +38,13 @@
         state: present
       become: yes
 
-    - name: Create directories for Prometheus
+    - name: Create primary directory for Prometheus
       file:
         path: /etc/prometheus
         state: directory
       become: yes
 
-    - name: Create databse directory for Prometheus
+    - name: Create database directory for Prometheus
       file:
         path: "{{ prometheus_db_location }}"
         state: directory

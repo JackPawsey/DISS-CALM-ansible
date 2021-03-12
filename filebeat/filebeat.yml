@@ -1,4 +1,3 @@
-
 # Sending every *.log file under /var/log/calm/*.log 
 filebeat.inputs:
 - type: log

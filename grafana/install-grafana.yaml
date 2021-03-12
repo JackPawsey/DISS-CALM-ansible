@@ -92,21 +92,10 @@
     grafana_datasource:
       name: prometheus-datasource
       grafana_url: "http://{{ ansible_ssh_host }}:3000"
-      grafana_user: "admin"
-      grafana_password: "Azendius97"
+      grafana_user: "CALMAdmin"
+      grafana_password: "AdminPassword"
       ds_type: "prometheus"
       url: "http://{{ prometheus_instance_ip }}/prometheus"
-      basic_auth_user: "admin"
-      basic_auth_password: "Azendius97"
+      basic_auth_user: "CALMAdmin"
+      basic_auth_password: "AdminPassword"
       state: present
-
-  #- name: Import Grafana dashboard
-  #  grafana_dashboard:
-  #    grafana_url: "http://{{ ansible_ssh_host }}:3000"
-  #    grafana_user: "admin"
-  #    grafana_password: "Azendius97"
-  #    state: present
-  #    message: Updated by ansible
-  #    overwrite: yes
-  #    path: /etc/grafana/dashboard.json
-  #  become: yes

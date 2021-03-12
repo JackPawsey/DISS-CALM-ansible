@@ -6,8 +6,8 @@ scrape_configs:
     metrics_path: /prometheus/metrics
     scrape_interval: 5s
     basic_auth:
-      username: admin
-      password: Azendius97
+      username: CALMAdmin
+      password: AdminPassword
     static_configs:
       - targets: ['localhost']
 
@@ -45,8 +45,8 @@ scrape_configs:
   - job_name: 'Alertmanager'
     metrics_path: /alertmanager/metrics
     basic_auth:
-      username: admin
-      password: Azendius97
+      username: CALMAdmin
+      password: AdminPassword
     ec2_sd_configs:
       - region: {{ region }}
         port: 80
@@ -72,8 +72,8 @@ alerting:
     - scheme: http
       path_prefix: /alertmanager
       basic_auth:
-        username: admin
-        password: Azendius97
+        username: CALMAdmin
+        password: AdminPassword
       ec2_sd_configs:
         - region: {{ region }}
           port: 80

@@ -1,7 +1,6 @@
+
+# Sending every *.log file under /var/log/calm/*.log 
 filebeat.inputs:
-# The following block is sending every *.log files under
-# /var/log/calm/*.log to the endpoint configured
-# at the end of the file.
 - type: log
   processors:
   - add_fields:

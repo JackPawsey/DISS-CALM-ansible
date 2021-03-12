@@ -43,8 +43,8 @@
   - name: Create password file
     htpasswd:
       path: /etc/nginx/.htpasswd
-      name: admin
-      password: Azendius97
+      name: CALMAdmin
+      password: AdminPassword
     become: yes
 
   # Start Nginx service

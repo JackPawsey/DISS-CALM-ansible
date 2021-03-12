@@ -2,10 +2,6 @@
 
 Ansible playbooks to install and configure open source software using variables from Terraform Apply output
 
-Grafana login:
-- username: CALMAdmin
-- password: AdminPassword
-
-Prometheus/Alertmanager login:
+Prometheus/Alertmanager/Grafana login:
 - username: CALMAdmin
 - password: AdminPassword

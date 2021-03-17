@@ -80,5 +80,6 @@ alerting:
           filters:
             - name: tag:Name
               values:
-                - '*Alertmanager*'
-                - '*alertmanager*'
+                - '{{ env }}-{{ name }}-Alertmanager'
+                #- '*Alertmanager*'
+                #- '*alertmanager*'

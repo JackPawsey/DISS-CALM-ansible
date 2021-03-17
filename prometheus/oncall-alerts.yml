@@ -14,7 +14,7 @@ groups:
   - name: EC2 Host
     rules:
     - alert: HostOutOfMemory
-      expr: node_memory_MemAvailable / node_memory_MemTotal * 100 < 10
+      expr: node_memory_MemAvailable / node_memory_MemTotal * 100 < 10 and ON() hour() < 9 > 17
       for: 5m
       labels:
         severity: critical

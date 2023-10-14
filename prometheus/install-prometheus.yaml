@@ -8,7 +8,7 @@
 # Add Process Exporter
 - import_playbook: ../process-exporter/install-process-exporter.yaml ip={{ prometheus_instance_ip }}
 
-# Add Process Exporter
+# Add Cloudwatch Exporter
 - import_playbook: ../cloudwatch-exporter/install-cloudwatch-exporter.yaml ip={{ prometheus_instance_ip }}
 
 # Add Nginx

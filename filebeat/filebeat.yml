@@ -13,7 +13,7 @@ filebeat.inputs:
     - /var/log/calm/*.log
 
 output.logstash:
-  hosts: ["http://logstash-staging.simplycalm.net:5044"]
+  hosts: ["http://logstash-staging.simplycalm.net:5044"] # FIX ME, currently hardcoded to staging
   ttl: 60
   pipelining: 0
   loadbalance: true

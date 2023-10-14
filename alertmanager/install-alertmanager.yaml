@@ -17,8 +17,8 @@
     alertmanager_version: 0.21.0
     default_mailbox: "{{ env }}.calm.alerts@gmail.com"
     oncall_mailbox: "{{ env }}.calm.oncall@gmail.com"
-    alerts_password: "{{ 'eqhafswuyshoaeoa' if env == 'staging' else 'calokoybrxaewcux' }}"
-    oncall_password: "{{ 'jfedoeurpvybpmiq' if env == 'staging' else 'iynkhyvmpbycyvao' }}"
+    alerts_password: "{{ 'staging_default_password' if env == 'staging' else 'prod_default_password' }}"
+    oncall_password: "{{ 'staging_oncall_password' if env == 'staging' else 'prod_oncall_password' }}"
   tasks:
     - name: create group
       group:
